@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "Watchlist": {
+      "title": "Watchlist",
+      "description": "User created watchlist containing a collection of watched stock symbols",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 64 },
+        "stockSymbols": { "type": "array" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "name", "stockSymbols", "createdAt", "updatedAt"]
+    },
+    "UserSnapshot": {
+      "title": "UserSnapshot",
+      "description": "Historical snapshot of a stock state as of the user's previous check-in",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "stockSymbol": { "type": "string", "maxLength": 16 },
+        "price": { "type": "number" },
+        "volume": { "type": "number" },
+        "attentionScore": { "type": "number" },
+        "capturedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "stockSymbol", "price", "volume", "attentionScore", "capturedAt"]
+    },
+    "AlertRule": {
+      "title": "AlertRule",
+      "description": "User configured conditional alert rule",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "stockSymbol": { "type": "string", "maxLength": 16 },
+        "ruleType": { "type": "string", "maxLength": 32 },
+        "threshold": { "type": "number" },
+        "enabled": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "stockSymbol", "ruleType", "threshold", "enabled", "createdAt", "updatedAt"]
+    },
+    "ChangeEvent": {
+      "title": "ChangeEvent",
+      "description": "Meaningful change detection event logged when meaningful movements are detected",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "stockSymbol": { "type": "string", "maxLength": 16 },
+        "eventType": { "type": "string", "maxLength": 32 },
+        "severity": { "type": "string", "maxLength": 16 },
+        "score": { "type": "number" },
+        "explanation": { "type": "string", "maxLength": 500 },
+        "beforeValue": { "type": "number" },
+        "afterValue": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "stockSymbol", "eventType", "severity", "score", "explanation", "beforeValue", "afterValue", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile state and visit timestamps",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "lastVisitedAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["userId", "lastVisitedAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/watchlists/{watchlistId}": {
+      "schema": "Watchlist",
+      "description": "Stores user watchlists"
+    },
+    "/users/{userId}/snapshots/{snapshotId}": {
+      "schema": "UserSnapshot",
+      "description": "Stores stock price and volume snapshots captured when the user leaves or reviews"
+    },
+    "/users/{userId}/alerts/{alertId}": {
+      "schema": "AlertRule",
+      "description": "Stores custom alert trigger rules set by the user"
+    },
+    "/users/{userId}/change_events/{eventId}": {
+      "schema": "ChangeEvent",
+      "description": "Stores detected meaningful change events"
+    },
+    "/users/{userId}/profile/{profileId}": {
+      "schema": "UserProfile",
+      "description": "Stores user visit metadata"
+    }
+  }
+}
